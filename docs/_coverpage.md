@@ -1,4 +1,4 @@
-# **Cyber Security Blog**
+# **Cyber Security Quick Notes**
 
 > A Practical Reference for Aspiring Security Professionals
 
