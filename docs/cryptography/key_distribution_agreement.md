@@ -17,3 +17,8 @@
 **Key Agreement** is when both people (or systems) work together to create a shared secret key. No one sends the full key directly. Instead, they exchange some public information and calculate the same key on both sides.
 
 **Example:** Alice and Bob both agrees on some public numbers. They each select a secret number and mix it with the public numbers. They send the mixed results to each other. Using some math, they both get the same secret key — even though they didn’t send it directly!
+
+## References
+
+- [Wikipedia – Key Distribution](https://en.wikipedia.org/wiki/Key_distribution)
+- [Wikipedia – Key Agreement](https://en.wikipedia.org/wiki/Key-agreement_protocol)
