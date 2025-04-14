@@ -18,7 +18,7 @@ If you’re hiring or know of an opportunity that aligns with my interests and b
 
 ## Contribution
 
-I’m looking for passionate individuals who’d like to **collaborate, contribute, or share feedback** on this blog or any cybersecurity-related topics.
+I’m looking for passionate individuals who’d like to **collaborate, contribute, or share feedback** on this blog or any cybersecurity-related topics. Here is the [list of present and past contributors](/contributor.md) to this project
 
 Whether you’re a fellow student, an industry professional, or just someone curious about cybersecurity, your input is more than welcome! Following are the ways in which you can contribute,
 
