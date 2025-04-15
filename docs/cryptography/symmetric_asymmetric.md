@@ -9,7 +9,7 @@ In cryptography, Symmetric and Asymmetric Key Cryptography are two fundamental t
 - The same key is shared among two or more parties.
 - A major challenge is securely sharing the key, but there are established methods to address this issue.
 - Symmetric ciphers are generally faster and more efficient than their counterparts (asymmetric ciphers).
-- They make use of either [Stream Ciphers](cryptography/stream.md) or [Block Ciphers](cryptography/block.md).
+- They make use of either [Stream Ciphers or Block Ciphers](cryptography/stream_block.md).
 
 ![Symmetric Key Cryptography Example](../assets/cryptography/symmetric.svg)
 
