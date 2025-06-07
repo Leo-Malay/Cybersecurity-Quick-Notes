@@ -1,5 +1,7 @@
 # Bandit - Beginner
 
+![Bandit](../../assets/ctf/bandit.png)
+
 ## Level 0
 
 **Goal:** Login to the ssh server `bandit.labs.overthewire.org` on port `2220`. The username is `bandit0` and password is `bandit0`
@@ -272,59 +274,229 @@ echo "0qXahG8ZjOVMN9Ghs7iOWsCfZyXOUbYO" | nc -l 2323 &  # Run in backgound
 
 ## Level 21
 
-**Goal:**
+**Goal:** A program is running automatically at regular intervals from cron, the time-based job scheduler. Look in /etc/cron.d/ for the configuration and see what command is being executed.
+
+As suggested in goal, I went to the `/etc/cron.d` folder and inpected all the files where I found a file for bandit22 the next level and inspected the code for further clues. It led me to the bash script which copied the password for next lavel to a file in tmp folder. Well got the answer, simple right?
+
+```bash
+cd /etc/cron.d
+ls -la
+cat cronjob_bandit22
+cd /usr/bin
+ls | grep bandit
+cat cronjob_bandit22.sh
+cat /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
+```
 
 ## Level 22
 
-**Goal:**
+**Goal:** A program is running automatically at regular intervals from cron, the time-based job scheduler. Look in /etc/cron.d/ for the configuration and see what command is being executed.
+
+Well this level is similar to the last one, however instead of just reading from the file we need to actually read, understand and dig out the tmp file name by running the commands. Well it was a simple script and was able to get the password.
+
+```bash
+cd /etc/cron.d
+cat cronjob_bandit23
+cat /usr/bin/cronjob_bandit23.sh
+echo "I am user bandit23" | md5sum | cut -d ' ' -f 1
+cat /tmp/8ca319486bfbbc3663ea0fbe81326349
+```
 
 ## Level 23
 
-**Goal:**
+**Goal:** A program is running automatically at regular intervals from cron, the time-based job scheduler. Look in /etc/cron.d/ for the configuration and see what command is being executed.
+
+Similar to last 2 but here there was a script that was executing all the scripts in the folder of bandit24 as a user bandit24. Thus we can now write a script to extract the password bandit24 by placing our so called malicilus script into the given folder. Struggled with permission on my own directory and wondered why my script was not working :(
+
+```bash
+cd /etc/cron.d
+cat cronjob_bandit24
+cat /usr/bin/cronjob_bandit24.sh
+mktemp -d
+cd /tmp/tmp.EmlSrC8cBt
+vim get_pass.sh
+chmod 777 get_pass.sh
+touch bandit24
+chmod 777 bandit24
+chmod 777 /tmp/tmp.EmlSrC8cBt   # Struggled long time why my script was not working huh
+cp ./get_pass.sh /var/spool/bandit24/foo     # Wait for 1 minute whole literally.
+```
+
+The get_pass.sh script is as follows,
+
+```bash
+#!/bin/bash
+
+cat /etc/bandit_pass/bandit24 >> /tmp/tmp.EmlSrC8cBt/bandit24
+```
 
 ## Level 24
 
-**Goal:**
+**Goal:** A daemon is listening on port 30002 and will give you the password for bandit25 if given the password for bandit24 and a secret numeric 4-digit pincode. There is no way to retrieve the pincode except by going through all of the 10000 combinations, called brute-forcing.
+
+Before doing anything, I tried to connect to the given daemon. I realized that it requires `password pin` pair. Thus I made a script to generate all possible combinations and saved it to an input file. Then I piped it to the daemon and the output to `output.txt`.Using the sort `sort -u` command I dound the unique output which contained the password.
+
+```bash
+nc localhost 30002
+mktemp -d
+cd /tmp/tmp.Z57jwXJsYU
+vim test.sh
+touch input.txt
+bash test.sh
+cat input.txt | nc localhost 30002 >> output.txt
+sort -u output.txt
+```
+
+The code for generating the input file is as follows,
+
+```bash
+#!/bin/bash
+
+for i in {0..9}
+do
+        for j in {0..9}
+        do
+                for k in {0..9}
+                do
+                        for l in {0..9}
+                        do
+                                echo "gb8KRRCsshuZXI0tUuR6ypOFjiZbf3G8 $i$j$k$l" > input.txt
+                        done
+                done
+        done
+done
+```
 
 ## Level 25
 
-**Goal:**
+**Goal:** Logging in to bandit26 from bandit25 should be fairly easy… The shell for user bandit26 is not /bin/bash, but something else. Find out what it is, how it works and how to break out of it.
+
+Logging In, we are provided with ssh privatekey for bandit26. Now to check the default shell of any user we need to check the `/etc/passwd` file. The last entity in each line is the default shell which is here in our case `/usr/bin/showtext`. Now upon inspecting, we see that more is used. Thus we can exploit it by making our terminal very very small. For this I had to take a [hint](https://mayadevbe.me/posts/overthewire/bandit/level26/)
+
+```bash
+cat /etc/passwd
+ls -la /usr/bin/showtext
+cat /usr/bin/showtext
+exit    # Adjust the window to very small in height as more command is used.
+ssh bandit26@bandit.labs.overthewire.org -p 2220 -i test
+(esc) :set shell=/bin/bash
+(esc) :shell
+cat /etc/bandit_pass/bandit26
+```
+
+In the above command test is the key provided in level 25 saved on our local PC.
 
 ## Level 26
 
-**Goal:**
+**Goal:** Good job getting a shell! Now hurry and grab the password for bandit27!
+
+While we are already logged in.. we can use the given binary file to run any command as bandit27. I will use it to get the password for bandit27
+
+```bash
+./bandit27-do cat /etc/bandit_pass/bandit27
+```
 
 ## Level 27
 
-**Goal:**
+**Goal:** There is a git repository at ssh://bandit27-git@localhost/home/bandit27-git/repo via the port 2220. The password for the user bandit27-git is the same as for the user bandit27. Clone the repository and find the password for the next level.
+
+For this we just need to clone the repo nothing else. The only trick here is that how will you pass the port in the git url.
+
+```bash
+mktemp -d
+cd /tmp/tmp.8sRbM8Geun
+git clone ssh://bandit27-git@localhost:2220/home/bandit27-git/repo
+cd repo
+cat README
+```
 
 ## Level 28
 
-**Goal:**
+**Goal:** There is a git repository at ssh://bandit28-git@localhost/home/bandit28-git/repo via the port 2220. The password for the user bandit28-git is the same as for the user bandit28. Clone the repository and find the password for the next level.
+
+While the goal is similar to the last level but password is not present here... Maybe in the last commit?? and few quick commands for git and found it.
+
+```bash
+mktemp -d
+cd /tmp/tmp.me4AQ4Qlcy
+git clone ssh://bandit28-git@localhost:2220/home/bandit28-git/repo
+cd repo
+cat README.md
+git log
+git checkout fb0df1358b1ff146f581651a84bae622353a71c0
+cat README.md
+```
 
 ## Level 29
 
-**Goal:**
+**Goal:** There is a git repository at ssh://bandit29-git@localhost/home/bandit29-git/repo via the port 2220. The password for the user bandit29-git is the same as for the user bandit29. Clone the repository and find the password for the next level.
+
+Same initial procedue as last one. And upon reading it says no password in production.. maybe a different branch??
+
+```bash
+mktemp -d
+cd /tmp/tmp.M1nerAnJ8A
+git clone ssh://bandit29-git@localhost:2220/home/bandit29-git/repo
+cd repo
+cat README.md
+git branch -r      # Helps you list all the remote branchs.
+git checkout origin/dev
+cat README.md
+```
 
 ## Level 30
 
-**Goal:**
+**Goal:** There is a git repository at ssh://bandit30-git@localhost/home/bandit30-git/repo via the port 2220. The password for the user bandit30-git is the same as for the user bandit30. Clone the repository and find the password for the next level.
+
+Ahhhhhhhhhh...again the same steps... And the read me file was empty... No remote branchs... no commits... but I found the tag :|
+
+```bash
+mktemp -d
+cd /tmp/tmp.Ihrmgf8585
+git clone ssh://bandit30-git@localhost:2220/home/bandit30-git/repo
+cd repo
+cat README.md
+git tag -l
+git show secret
+```
 
 ## Level 31
 
-**Goal:**
+**Goal:** There is a git repository at ssh://bandit31-git@localhost/home/bandit31-git/repo via the port 2220. The password for the user bandit31-git is the same as for the user bandit31. Clone the repository and find the password for the next level.
+
+SAME..SAME...SAME...SAME... Well We need to make a file and commit it to the master branch.
+
+```bash
+mktemp -d
+cd /tmp/tmp.72Iiy6gH8f
+git clone ssh://bandit31-git@localhost:2220/home/bandit31-git/repo
+cd repo
+cat README.md
+echo "May I come in?" > key.txt
+vim .gitignore      # Remove the *.txt, save and exit
+git add .
+git commit -a -m "Key File"
+git push origin master      # Will throw error but the key will be written in the error message
+```
 
 ## Level 32
 
-**Goal:**
+**Goal:** After all this git stuff, it’s time for another escape. Good luck!
+
+Finally git stuff is over. I had spent a long time on this but evently had to take [hint](https://mayadevbe.me/posts/overthewire/bandit/level33/)
+
+```bash
+$0
+ls -la
+whoami
+cat /etc/bandit_pass/bandit33
+```
 
 ## Level 33
 
-**Goal:**
+**Goal:** Game Ends Here!! We Did It :)
 
-## Level 34
-
-**Goal:**
+![Bandit](../../assets/ctf/bandit-final.png)
 
 ## Passwords
 
@@ -344,56 +516,20 @@ echo "0qXahG8ZjOVMN9Ghs7iOWsCfZyXOUbYO" | nc -l 2323 &  # Run in backgound
 - Level 14: `MU4VWeTyJk8ROof1qqmcBPaLh7lDCPvS`
 - Level 15: `8xCjnmgoKbGLhHFAZlGE5Tmu4M2tKJQo`
 - Level 16: `kSkvUpMQ7lBYyCM4GBPvCvT1BfWRy0Dx`
-- Level 17:
-
-```text
------BEGIN RSA PRIVATE KEY-----
-MIIEogIBAAKCAQEAvmOkuifmMg6HL2YPIOjon6iWfbp7c3jx34YkYWqUH57SUdyJ
-imZzeyGC0gtZPGujUSxiJSWI/oTqexh+cAMTSMlOJf7+BrJObArnxd9Y7YT2bRPQ
-Ja6Lzb558YW3FZl87ORiO+rW4LCDCNd2lUvLE/GL2GWyuKN0K5iCd5TbtJzEkQTu
-DSt2mcNn4rhAL+JFr56o4T6z8WWAW18BR6yGrMq7Q/kALHYW3OekePQAzL0VUYbW
-JGTi65CxbCnzc/w4+mqQyvmzpWtMAzJTzAzQxNbkR2MBGySxDLrjg0LWN6sK7wNX
-x0YVztz/zbIkPjfkU1jHS+9EbVNj+D1XFOJuaQIDAQABAoIBABagpxpM1aoLWfvD
-KHcj10nqcoBc4oE11aFYQwik7xfW+24pRNuDE6SFthOar69jp5RlLwD1NhPx3iBl
-J9nOM8OJ0VToum43UOS8YxF8WwhXriYGnc1sskbwpXOUDc9uX4+UESzH22P29ovd
-d8WErY0gPxun8pbJLmxkAtWNhpMvfe0050vk9TL5wqbu9AlbssgTcCXkMQnPw9nC
-YNN6DDP2lbcBrvgT9YCNL6C+ZKufD52yOQ9qOkwFTEQpjtF4uNtJom+asvlpmS8A
-vLY9r60wYSvmZhNqBUrj7lyCtXMIu1kkd4w7F77k+DjHoAXyxcUp1DGL51sOmama
-+TOWWgECgYEA8JtPxP0GRJ+IQkX262jM3dEIkza8ky5moIwUqYdsx0NxHgRRhORT
-8c8hAuRBb2G82so8vUHk/fur85OEfc9TncnCY2crpoqsghifKLxrLgtT+qDpfZnx
-SatLdt8GfQ85yA7hnWWJ2MxF3NaeSDm75Lsm+tBbAiyc9P2jGRNtMSkCgYEAypHd
-HCctNi/FwjulhttFx/rHYKhLidZDFYeiE/v45bN4yFm8x7R/b0iE7KaszX+Exdvt
-SghaTdcG0Knyw1bpJVyusavPzpaJMjdJ6tcFhVAbAjm7enCIvGCSx+X3l5SiWg0A
-R57hJglezIiVjv3aGwHwvlZvtszK6zV6oXFAu0ECgYAbjo46T4hyP5tJi93V5HDi
-Ttiek7xRVxUl+iU7rWkGAXFpMLFteQEsRr7PJ/lemmEY5eTDAFMLy9FL2m9oQWCg
-R8VdwSk8r9FGLS+9aKcV5PI/WEKlwgXinB3OhYimtiG2Cg5JCqIZFHxD6MjEGOiu
-L8ktHMPvodBwNsSBULpG0QKBgBAplTfC1HOnWiMGOU3KPwYWt0O6CdTkmJOmL8Ni
-blh9elyZ9FsGxsgtRBXRsqXuz7wtsQAgLHxbdLq/ZJQ7YfzOKU4ZxEnabvXnvWkU
-YOdjHdSOoKvDQNWu6ucyLRAWFuISeXw9a/9p7ftpxm0TSgyvmfLF2MIAEwyzRqaM
-77pBAoGAMmjmIJdjp+Ez8duyn3ieo36yrttF5NSsJLAbxFpdlc1gvtGCWW+9Cq0b
-dxviW8+TFVEBl1O4f7HVm6EpTscdDxU+bCXWkfjuRb7Dy9GOtt9JPsX8MBTakzh3
-vBgsyi/sN3RqRBcGU40fOoZyfAMT8s1m/uYv52O6IgeuZ/ujbjY=
------END RSA PRIVATE KEY-----
-```
-
+- Level 17: `EReVavePLFHtFlFsjn3hyzMlvSuSAcRD`
 - Level 18: `x2gLTTjFwMOhQ8oWNbMN362QKxfRqGlO`
 - Level 19: `cGWpMaKXVwDUNgPAVJbWYuGHVn9zl3j8`
 - Level 20: `0qXahG8ZjOVMN9Ghs7iOWsCfZyXOUbYO`
 - Level 21: `EeoULMCra2q0dSkYj561DX7s1CpBuOBt`
-- Level 22: ``
-- Level 23: ``
-- Level 24: ``
-- Level 25: ``
-- Level 26: ``
-- Level 27: ``
-- Level 28: ``
-- Level 29: ``
-- Level 30: ``
-- Level 31: ``
-- Level 32: ``
-- Level 33: ``
-- Level 34: ``
-
-```
-
-```
+- Level 22: `tRae0UfB9v0UzbCdn9cY0gQnds9GF58Q`
+- Level 23: `0Zf11ioIjMVN551jX3CmStKLYqjk54Ga`
+- Level 24: `gb8KRRCsshuZXI0tUuR6ypOFjiZbf3G8`
+- Level 25: `iCi86ttT4KSNe1armKiwbQNmB3YJP3q4`
+- Level 26: `s0773xxkk0MXfdqOfPRVr9L3jJBUOgCZ`
+- Level 27: `upsNCc7vzaRDx6oZC6GiR6ERwe1MowGB`
+- Level 28: `Yz9IpL0sBcCeuG7m9uQFt8ZNpS4HZRcN`
+- Level 29: `4pT1t5DENaYuqnqvadYs1oE4QLCdjmJ7`
+- Level 30: `qp30ex3VLz5MDG1n91YowTv4Q8l7CDZL`
+- Level 31: `fb5S2xb7bRyFmAvQYQGEqsbhVyJqhnDy`
+- Level 32: `3O9RfhqyAlVBEZpVb6LYStshZoqoSx5K`
+- Level 33: `tQdtbs5D5i2vJwkO8mEyYEyTL8izoeJ0`
