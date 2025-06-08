@@ -1,24 +1,32 @@
-# Bandit - Beginner
+# Bandit - Level Beginner
 
 ![Bandit](../../assets/ctf/bandit.png)
+
+The **Bandit wargame** is aimed at absolute beginners. It will teach the basics needed to be able to play other wargames.
+
+**Official Website:** [OverTheWire - Bandit](https://overthewire.org/wargames/bandit/)
+
+> **Note:** Please don't copy or jump to solutions. This page is designed for people who are not able to figure it out even after spending quite a lot of time.
+
+> **AI WARNING:** AI has not been used to solved any of the level however, It has been used to format and rewrite my description to a professional tone and spellcheck.
 
 ## Level 0
 
 **Goal:** Login to the ssh server `bandit.labs.overthewire.org` on port `2220`. The username is `bandit0` and password is `bandit0`
 
-To solve this, I used the following command to connect to the ssh server with given username, password and port.
+To solve this level, I connected to the SSH server using the provided username, password, and port with the following command:
 
 ```bash
 ssh bandit0@bandit.labs.overthewire.org -p 2220
 ```
 
-Upon logging in, Found the `readme` file in the home directory of user which contained the password the the level 1.
+After successfully logging in, I located the `readme` file in the user’s home directory, which contained the password for level 1.
 
 ## Level 1
 
 **Goal:** The password for the next level is stored in a file called `-` located in the home directory
 
-This one is pretty simple. To open this file we make use of the `cat` commad, however, it is required to enter the whole path to the `-` file. Using the following command we get the password to level 2.
+This level is straightforward. To open the file named `-`, it is necessary to specify the entire path. Using the following command, I retrieved the password for level 2:
 
 ```bash
 cat ./-
@@ -26,9 +34,9 @@ cat ./-
 
 ## Level 2
 
-**Goal:** The password for the next level is stored in a file called spaces in this filename located in the home directory
+**Goal:** The password for the next level is stored in a file called `spaces in this filename` located in the home directory
 
-I found out 2 ways of solving this question. First, you can simple direct linux to print all the files. Second, escape the space character using backslash. Thus we have out password for level 3.
+I discovered two methods to solve this challenge. First, by directing Linux to display the contents of all files using a wildcard. Second, by escaping the spaces in the filename with backslashes. Using either approach, I obtained the password for level 3:
 
 ```bash
 cat ./*
@@ -37,9 +45,9 @@ cat ./spaces\ in\ this\ filename
 
 ## Level 3
 
-**Goal:** The password for the next level is stored in a hidden file in the inhere directory.
+**Goal:** The password for the next level is stored in a `hidden file` in the `inhere` directory.
 
-On logging in, I found that in the home directory there is another directory named `inhere` and suprisingly it's empty!. Thus I tried the `ll` commad to show all the hidden files in the folder and there it was, the file name was `..Hiding-From-You`. And on to level 4
+Upon logging in, I noticed a directory named `inhere` in the home directory, which initially appeared empty. To reveal hidden files, I used the `ll` command, which displayed a hidden file named `..Hiding-From-You`. Reading this file provided the password for level 4:
 
 ```bash
 ll
@@ -48,9 +56,9 @@ cat ./...Hiding-From-You
 
 ## Level 4
 
-**Goal:** The password for the next level is stored in the only human-readable file in the inhere directory.
+**Goal:** The password for the next level is stored in the **only** `human-readable` file in the `inhere` directory.
 
-Interesting...I tried printing all the file however, they all of them contained binary code except one. Well I found the password but it was not the right way... Thus after reading the level description. I used the `man` command to know what the suggested commands do. Among them was `file` command which had the description `determine file type`. Bingo I used the file command and passed all the files using `./*` and led me to the file with human readable ASCII text and there I found the password for level 5.
+Initially, I attempted to print all the files, but most contained binary data except for one. Although I found a password, I realized this was not the intended method. After reviewing the level description, I used the `man` command to understand the suggested commands. Among them, the `file` command, described as `determine file type` stood out. Using the file command on all files `./*` in the `inhere` directory, I identified the file containing human-readable ASCII text. Reading this file revealed the password for level 5:
 
 ```bash
 man file
@@ -61,29 +69,29 @@ cat ./-file07
 
 ## Level 5
 
-**Goal:** The password for the next level is stored in a file somewhere under the inhere directory and has all of the following properties:
+**Goal:** The password for the next level is stored in a file **somewhere** under the `inhere` directory and has all of the following properties:
 
 - human-readable
 - 1033 bytes in size
 - not executable
 
-The i`inhere` directory contained multiple directories. This took me some time to process. I had to read a lot of `man` page for `find` command. After reading for some time, I eventually figured out and found the password.
+The `inhere` directory contained multiple subdirectories, which required some time to explore. I studied the `man` page for the `find` command to understand how to search by file size. Eventually, I used the following command to locate the file with the specified size and retrieve the password:
 
 ```bash
-find -size 1033c    # not b but c for character in bytes.
-ll ./maybehere07/.file2     # To verify the size and permission
+find -size 1033c    # Note: 'c' specifies size in bytes (characters), not blocks.
+ll ./maybehere07/.file2     # To verify the file’s size and permissions
 cat ./maybehere07/.file2
 ```
 
 ## Level 6
 
-**Goal:** The password for the next level is stored somewhere on the server and has all of the following properties:
+**Goal:** The password for the next level is stored **somewhere on the server** and has all of the following properties:
 
-- owned by user bandit7
-- owned by group bandit6
+- owned by user `bandit7`
+- owned by group `bandit6`
 - 33 bytes in size
 
-Well again read the `man` pages for `find` and constructed the following command which gave a lot on nonsence but had the one file path with password to next level.
+I consulted the `man` pages for the find command again and constructed the following command. Although it produced a lot of output, it included the file path containing the password for the next level:
 
 ```bash
 find ../../ -size 33c -user bandit7 -group bandit6
@@ -92,9 +100,9 @@ cat ../../var/lib/dpkg/info/bandit7.password
 
 ## Level 7
 
-**Goal:** The password for the next level is stored in the file data.txt next to the word `millionth`
+**Goal:** The password for the next level is stored in the file `data.txt` next to the word `millionth`
 
-To see how many words are actually there I used the `wc -w` command. Then I tried to print all with `cat` and `grep` combo and it game me the password to the next level.
+To determine the number of words, I used the `wc -w` command. Then, by combining `cat` with `grep`, I searched for the keyword `millionth` which revealed the password for the next level:
 
 ```bash
 cat data.txt | grep "millionth"
@@ -102,18 +110,18 @@ cat data.txt | grep "millionth"
 
 ## Level 8
 
-**Goal:** The password for the next level is stored in the file data.txt and is the only line of text that occurs only once.
+**Goal:** The password for the next level is stored in the file `data.txt` and is the only line of text that **occurs only once**.
 
-Intresting... I used `whatis` command for `sort` and `uniq` given in the suggested command and almost figured out the answer. What `sort` does is, it sorts all the lines in the files in A-Z formart. What `uniq` does is, it check the adjacent lines and return the unique line. Thus for the soultion, I have to `sort` and then `uniq`. Bonus: We can use both `u` and `c` flag.
+Using the `whatis` command, I explored the functions of the suggested commands `sort` and `uniq`. The sort command arranges all lines in alphabetical (A-Z) order, while `uniq` filters out adjacent duplicate lines, returning only unique lines. To solve the challenge, I combined these commands by sorting the data first and then applying uniq. Additionally, I used the `-u` and `-c` flags for different outputs:
 
 ```bash
-sort data.txt | uniq -u     # Better.. only one line output
-sort data.txt | uniq -c     # Okay Okay.. many lines output
+sort data.txt | uniq -u     # Outputs only unique lines
+sort data.txt | uniq -c     # Counts occurrences of each line
 ```
 
 ## Level 9
 
-**Goal:** The password for the next level is stored in the file data.txt in one of the few human-readable strings, preceded by several ‘=’ characters.
+**Goal:** The password for the next level is stored in the file `data.txt` in one of the few human-readable strings, preceded by several `=` characters.
 
 From the given suggested commands, I used `whatis` commad on `strings` and it informed me that it print the sequences of printable characters in files. We I got the solution as now I can do the `grep` on the output.
 
@@ -123,9 +131,9 @@ strings data.txt | grep "=="
 
 ## Level 10
 
-**Goal:** The password for the next level is stored in the file data.txt, which contains base64 encoded data
+**Goal:** The password for the next level is stored in the file `data.txt`, which contains **base64 encoded data**
 
-Given the data.txt file is base64 encoded and we need to decode it to obtain the password to the next level. Well first I checked what is the purpose of `base64` command given as a suggestion. Then I went to the `man` page found my answer.
+Using the `whatis` command, I learned that strings prints sequences of printable characters within files. With this understanding, I applied `grep` to filter the output, which led me to the solution:
 
 ```bash
 base64 -d data.txt
@@ -133,15 +141,15 @@ base64 -d data.txt
 
 ## Level 11
 
-**Goal:** The password for the next level is stored in the file data.txt, where all lowercase (a-z) and uppercase (A-Z) letters have been rotated by 13 positions
+**Goal:** The password for the next level is stored in the file `data.txt`, where all lowercase (a-z) and uppercase (A-Z) letters have been rotated by `13 positions`.
 
-Well Interestingly, its llike a ceasar cipher where the key is 13. Given the suggested commands, I chose to do `whatis` on the unfamiliar command `tr` and found out it helps in translation of charaters. Well what I can now do is I can replact A with N and so on...
+This challenge resembled a `Caesar cipher` with a key of `13`. Using the `whatis` command, I investigated the unfamiliar `tr` command and discovered that it `translates characters`. By applying this, I was able to replace each letter with its counterpart 13 positions ahead in the alphabet, effectively decoding the text:
 
 ```bash
 cat data.txt | tr [a-z] [n-za-m] | tr [A-Z] [N-ZA-M]
 ```
 
-The above is my initial solution but is there a better way?? After some trial and error, I found the compact version which is not that pretty but I guess good enough...
+The previous solution was my initial approach, but I later discovered a more concise method. Although less visually clear, this compact command achieves the same result effectively:
 
 ```bash
 cat data.txt | tr [a-zA-Z] [n-za-mN-ZA-M]
@@ -149,9 +157,13 @@ cat data.txt | tr [a-zA-Z] [n-za-mN-ZA-M]
 
 ## Level 12
 
-**Goal:** TThe password for the next level is stored in the file data.txt, which is a hexdump of a file that has been repeatedly compressed. For this level it may be useful to create a directory under /tmp in which you can work. Use mkdir with a hard to guess directory name. Or better, use the command “mktemp -d”. Then copy the datafile using cp, and rename it using mv
+**Goal:** The password for the next level is stored in the file `data.txt`, which is a `hexdump` of a file that has been repeatedly compressed. For this level it may be useful to create a directory under `/tmp` in which you can work. Use mkdir with a hard to guess directory name. Or better, use the command `mktemp -d`. Then copy the datafile using `cp`, and rename it using `mv`
 
-First things first create a tmp directory, copy the file there and move there. Now as stated it is hexdeumped thus we need to reverse it. Reviewing the suggested commands I found `xxd` and used `whatis` command on it and reading the `man` page I reversed it. Now to check what kind on compress it it we use the `file` command. Now I need to decompress it. Again the suggested commands, I came to know about `gzip` which is used for compression and expansion of files.. Thus reading the man page and performed the `gunzip` command. Now again I used `file` command to check and it said we need to `bzip2`. Thus I did `whatis` and `man` on `bzip2`. After that It was again `gunzip`. Then It was `tar` just see the command trail.
+First, I created a temporary directory, copied the file there, and navigated to it. Since the file was `hex-dumped`, I needed to `reverse` it. After reviewing the suggested commands, I used `whatis` and man on `xxd` to reverse the hex dump. Then, I used the `file` command to identify the file type, which indicated compression.
+
+Following this, I explored the `gzip` command for decompression using its `man` page and ran `gunzip`. The `file` command then suggested the file was compressed with `bzip2`, so I used `whatis` and `man` for `bzip2` and decompressed accordingly. Subsequently, the file was a `tar` archive, so I extracted it using `tar`.
+
+This process was repeated multiple times—alternating between `gzip`, `bzip2`, and `tar`—until the final decompressed file was obtained. Below is the command sequence demonstrating the steps taken:
 
 ```bash
 mktemp -d
@@ -191,9 +203,9 @@ file tmp1
 
 ## Level 13
 
-**Goal:** The password for the next level is stored in /etc/bandit_pass/bandit14 and can only be read by user bandit14. For this level, you don’t get the next password, but you get a private SSH key that can be used to log into the next level.
+**Goal:** The password for the next level is stored in `/etc/bandit_pass/bandit14` and can only be read by user `bandit14`. For this level, you don’t get the next password, but you get a `private SSH key` that can be used to log into the next level.
 
-I have the private key which I can use to login to account bandit14. But I had to look at the `man` page of `ssh` on how to supply the private key as file in the command.
+I obtained the private key required to log in to the `bandit14` account. To understand how to use a private key with the `ssh` command, I referred to the `man` page for `ssh`. There, I learned how to specify a private key file using the `-i` option. I then logged in and retrieved the password for the next level:
 
 ```bash
 ssh bandit14@bandit.labs.overthewire.org -p 2220 -i sshkey.private
@@ -202,9 +214,9 @@ cat /etc/bandit_pass/bandit14
 
 ## Level 14
 
-**Goal:** The password for the next level can be retrieved by submitting the password of the current level to port 30000 on localhost.
+**Goal:** The password for the next level can be retrieved by submitting the password of the current level to port `30000` on `localhost`.
 
-Okay what i unserdatnd is if i do a post request to the localhost:30000 with the current password I'll get the password to the next level. I tried to pipe the test string to the given address and port using the netcat `nc` command which I figured out after looking at's `man` pages. Upon submitting I got the reply "Wrong Answer". Thus it confirmed that I just need to replace the string "Hello" with the current password.
+From my understanding, I needed to make a `POST` request to `localhost:30000` using the current password to retrieve the next level’s password. I used the `nc` (netcat) command—after reviewing its `man` page—to send a test string to the specified address and port. The response "Wrong Answer" confirmed that the correct approach was to replace the string "Hello" with the actual password:
 
 ```bash
 echo "Hello" | nc localhost 30000
@@ -212,9 +224,9 @@ echo "Hello" | nc localhost 30000
 
 ## Level 15
 
-**Goal:** The password for the next level can be retrieved by submitting the password of the current level to port 30001 on localhost using SSL/TLS encryption.
+**Goal:** The password for the next level can be retrieved by submitting the password of the current level to port `30001` on `localhost` using `SSL/TLS encryption`.
 
-The provided hint suggessted to read "CONNECTED COMMANDS" but where?? I went through all the man pages of suggested command and found `openssl s_client`. Now using this command we can get the password.
+The provided hint suggested looking into `CONNECTED COMMANDS` though it wasn't immediately clear where. After reviewing the `man` pages for the suggested commands, I discovered openssl `s_client`, which is used to establish `SSL/TLS` connections. Using this command, I was able to connect to the specified port and retrieve the password by manually pasting the current one:
 
 ```bash
 openssl s_client -connect localhost:30001   # Open Connection and paste the password.
@@ -222,9 +234,11 @@ openssl s_client -connect localhost:30001   # Open Connection and paste the pass
 
 ## Level 16
 
-**Goal:** The credentials for the next level can be retrieved by submitting the password of the current level to a port on localhost in the range 31000 to 32000. First find out which of these ports have a server listening on them. Then find out which of those speak SSL/TLS and which don’t. There is only 1 server that will give the next credentials, the others will simply send back to you whatever you send to it.
+**Goal:** The credentials for the next level can be retrieved by submitting the password of the current level to a port on `localhost` in the range **31000 to 32000**. First find out which of these ports have a server listening on them. Then find out which of those speak `SSL/TLS` and which don’t. There is only `1 server` that will give the next credentials, the others will simply send back to you whatever you send to it.
 
-To find out which ports are listening, I used `nmap` to scan quickly. It reutrn 5 ports which I tried connecting to all of them and the server with port 31760 is the correct server where password will be extracted. However I faced problem of KeyUpdate Interactive problem. Which I solved using the `-quiet` flag at the end of function. However I received the private key!!
+To identify which ports were actively listening, I used `nmap` for a quick scan. It returned `five` open ports, which I tested individually. I discovered that the server on port `31790` was the correct one for retrieving the password.
+
+Initially, I encountered a `KeyUpdate Interactive` issue when connecting. I resolved this by adding the `-quiet` flag to the openssl `s_client` command. This successfully returned the private key:
 
 ```bash
 openssl s_client -connect localhost:31790 -quiet
@@ -232,9 +246,9 @@ openssl s_client -connect localhost:31790 -quiet
 
 ## Level 17
 
-**Goal:** There are 2 files in the homedirectory: passwords.old and passwords.new. The password for the next level is in passwords.new and is the only line that has been changed between passwords.old and passwords.new
+**Goal:** There are 2 files in the homedirectory: `passwords.old` and `passwords.new`. The password for the next level is in `passwords.new` and is the only line that has been changed between `passwords.old` and `passwords.new`
 
-Basically what we need to do is find the difference between both the files. Easy Pizy we can do ths using the `diff` commad.
+The goal here was to identify the difference between two files. This was straightforward—using the `diff` command, I was able to compare the files and retrieve the updated password:
 
 ```bash
 diff passwords.old passwords.new
@@ -242,9 +256,9 @@ diff passwords.old passwords.new
 
 ## Level 18
 
-**Goal:** The password for the next level is stored in a file readme in the homedirectory. Unfortunately, someone has modified .bashrc to log you out when you log in with SSH.
+**Goal:** The password for the next level is stored in a file `readme` in the homedirectory. Unfortunately, someone has modified `.bashrc` to log you out when you log in with `SSH`.
 
-Well Took a lot of time searching the `ssh` man pages eventually had to do a quick google search on how to open ssh with other shell like sh and got the answer.
+This challenge required logging in via `SSH` using a different shell. I spent considerable time exploring the ssh man pages but eventually resorted to a quick web search to find the solution. By using the `-t` flag, I was able to `force pseudo-terminal allocation` and launch a different shell (sh), which allowed me to access the `readme` file:
 
 ```bash
 ssh bandit18@bandit.labs.overthewire.org -p 2220 -t sh
@@ -253,9 +267,9 @@ cat readme
 
 ## Level 19
 
-**Goal:** To gain access to the next level, you should use the setuid binary in the homedirectory. Execute it without arguments to find out how to use it. The password for this level can be found in the usual place (/etc/bandit_pass), after you have used the setuid binary.
+**Goal:** To gain access to the next level, you should use the `setuid binary` in the homedirectory. Execute it without arguments to find out how to use it. The password for this level can be found in the usual place (`/etc/bandit_pass`), after you have used the `setuid binary`.
 
-The given binary file allows us to run our command with uid of bandit20 like a privilege to change to bandit20 user and run the command. Thus getting the answer is really easy. If you know this concept of uid, suid, guid then it's really easy.
+The provided binary is configured to execute commands with the `UID` of the `bandit20` user, essentially granting temporary `elevated privileges`. If you're familiar with concepts like `UID`, `SUID`, and `GUID`, this becomes a straightforward task. I used the binary to run a `cat` command, which revealed the password:
 
 ```bash
 ./bandit20-do cat /etc/bandit_pass/bandit20
@@ -263,9 +277,9 @@ The given binary file allows us to run our command with uid of bandit20 like a p
 
 ## Level 20
 
-**Goal:** There is a setuid binary in the homedirectory that does the following: it makes a connection to localhost on the port you specify as a commandline argument. It then reads a line of text from the connection and compares it to the password in the previous level (bandit20). If the password is correct, it will transmit the password for the next level (bandit21).
+**Goal:** There is a `setuid binary` in the homedirectory that does the following: it makes a connection to `localhost` on the port you specify as a commandline argument. It then reads a line of text from the connection and compares it to the password in the previous level (`bandit20`). If the password is correct, it will transmit the password for the next level (`bandit21`).
 
-Took some to understand what it does but yes did it without any help. So what we need to do is start a server and server the password of currentlevel. To server the password we will start the `nc` in listen mode and server the password.
+It took some time to fully understand the objective, but I was able to solve it without any external help. The task was to start a server that serves the current level's password. To achieve this, I used `nc` (netcat) in listening mode to serve the password, then connected to it using the provided binary:
 
 ```bash
 echo "0qXahG8ZjOVMN9Ghs7iOWsCfZyXOUbYO" | nc -l 2323 &  # Run in backgound
@@ -274,9 +288,9 @@ echo "0qXahG8ZjOVMN9Ghs7iOWsCfZyXOUbYO" | nc -l 2323 &  # Run in backgound
 
 ## Level 21
 
-**Goal:** A program is running automatically at regular intervals from cron, the time-based job scheduler. Look in /etc/cron.d/ for the configuration and see what command is being executed.
+**Goal:** A program is running automatically at regular intervals from cron, the time-based job scheduler. Look in `/etc/cron.d/` for the configuration and see what command is being executed.
 
-As suggested in goal, I went to the `/etc/cron.d` folder and inpected all the files where I found a file for bandit22 the next level and inspected the code for further clues. It led me to the bash script which copied the password for next lavel to a file in tmp folder. Well got the answer, simple right?
+As suggested in the level objective, I navigated to the `/etc/cron.d` directory and reviewed the cron jobs present. There, I found a file related to `bandit22`, the next level. Inspecting its contents led me to a corresponding bash script, which revealed that it periodically copies the password for the next level to a file in the `/tmp` directory. From there, retrieving the password was straightforward:
 
 ```bash
 cd /etc/cron.d
@@ -290,9 +304,9 @@ cat /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
 
 ## Level 22
 
-**Goal:** A program is running automatically at regular intervals from cron, the time-based job scheduler. Look in /etc/cron.d/ for the configuration and see what command is being executed.
+**Goal:** A program is running automatically at regular intervals from cron, the time-based job scheduler. Look in `/etc/cron.d/` for the configuration and see what command is being executed.
 
-Well this level is similar to the last one, however instead of just reading from the file we need to actually read, understand and dig out the tmp file name by running the commands. Well it was a simple script and was able to get the password.
+This level was quite similar to the previous one, but with an added challenge: instead of directly accessing the password file, I needed to analyze the script to determine the dynamically generated filename. After reviewing the cron job and its associated script, I found that it created the filename using an `MD5` hash of a specific string. Once I computed the hash and located the corresponding file in `/tmp`, I was able to retrieve the password:
 
 ```bash
 cd /etc/cron.d
@@ -304,9 +318,11 @@ cat /tmp/8ca319486bfbbc3663ea0fbe81326349
 
 ## Level 23
 
-**Goal:** A program is running automatically at regular intervals from cron, the time-based job scheduler. Look in /etc/cron.d/ for the configuration and see what command is being executed.
+**Goal:** A program is running automatically at regular intervals from cron, the time-based job scheduler. Look in `/etc/cron.d/` for the configuration and see what command is being executed.
 
-Similar to last 2 but here there was a script that was executing all the scripts in the folder of bandit24 as a user bandit24. Thus we can now write a script to extract the password bandit24 by placing our so called malicilus script into the given folder. Struggled with permission on my own directory and wondered why my script was not working :(
+This level was similar to the previous two but introduced a new challenge. There was a script that executed all scripts in a specific folder as the user `bandit24`. This allowed me to create and place a custom script in that folder to extract the password for `bandit24`.
+
+Initially, I struggled with permissions in my temporary directory, which prevented the script from running correctly until I adjusted them. After resolving the permission issues, I copied my script into the target directory and waited for it to execute:
 
 ```bash
 cd /etc/cron.d
@@ -318,23 +334,22 @@ vim get_pass.sh
 chmod 777 get_pass.sh
 touch bandit24
 chmod 777 bandit24
-chmod 777 /tmp/tmp.EmlSrC8cBt   # Struggled long time why my script was not working huh
-cp ./get_pass.sh /var/spool/bandit24/foo     # Wait for 1 minute whole literally.
+chmod 777 /tmp/tmp.EmlSrC8cBt   # Adjusted permissions after troubleshooting why the script was not running
+cp ./get_pass.sh /var/spool/bandit24/foo     # Waited about a minute for execution
 ```
 
-The get_pass.sh script is as follows,
+The `get_pass.sh` script content:
 
 ```bash
 #!/bin/bash
-
 cat /etc/bandit_pass/bandit24 >> /tmp/tmp.EmlSrC8cBt/bandit24
 ```
 
 ## Level 24
 
-**Goal:** A daemon is listening on port 30002 and will give you the password for bandit25 if given the password for bandit24 and a secret numeric 4-digit pincode. There is no way to retrieve the pincode except by going through all of the 10000 combinations, called brute-forcing.
+**Goal:** A daemon is listening on port `30002` and will give you the password for `bandit25` if given the password for `bandit24` and a `secret numeric 4-digit pincode`. There is no way to retrieve the pincode except by going through all of the `10000 combinations`, called **brute-forcing**.
 
-Before doing anything, I tried to connect to the given daemon. I realized that it requires `password pin` pair. Thus I made a script to generate all possible combinations and saved it to an input file. Then I piped it to the daemon and the output to `output.txt`.Using the sort `sort -u` command I dound the unique output which contained the password.
+Before proceeding, I connected to the provided daemon and discovered that it required a `password PIN pair`. To automate this, I created a script that generates all possible `4-digit PIN combinations` paired with the password, saving them to an input file. I then piped this input to the `daemon` via `nc` and redirected the output to a file. Using `sort -u`, I filtered the unique outputs to find the password:
 
 ```bash
 nc localhost 30002
@@ -347,11 +362,10 @@ cat input.txt | nc localhost 30002 >> output.txt
 sort -u output.txt
 ```
 
-The code for generating the input file is as follows,
+The script used to generate the input file is as follows:
 
 ```bash
 #!/bin/bash
-
 for i in {0..9}
 do
         for j in {0..9}
@@ -369,28 +383,30 @@ done
 
 ## Level 25
 
-**Goal:** Logging in to bandit26 from bandit25 should be fairly easy… The shell for user bandit26 is not /bin/bash, but something else. Find out what it is, how it works and how to break out of it.
+**Goal:** Logging in to `bandit26` from `bandit25` should be fairly easy… The shell for user `bandit26` is not `/bin/bash`, but something else. Find out what it is, how it works and how to break out of it.
 
-Logging In, we are provided with ssh privatekey for bandit26. Now to check the default shell of any user we need to check the `/etc/passwd` file. The last entity in each line is the default shell which is here in our case `/usr/bin/showtext`. Now upon inspecting, we see that more is used. Thus we can exploit it by making our terminal very very small. For this I had to take a [hint](https://mayadevbe.me/posts/overthewire/bandit/level26/)
+Upon logging in, I was provided with the `SSH private key` for user `bandit26`. To identify the user’s default shell, I examined the `/etc/passwd` file. The default shell is indicated as the last field in each line, which in this case is `/usr/bin/showtext`. Upon further inspection, I found that this shell invokes the more command.
+
+To exploit this behavior, I resized my terminal window to a very small height, which triggered a vulnerability due to how more handles terminal dimensions. For this step, I referred to an external [hint](https://mayadevbe.me/posts/overthewire/bandit/level26/)
 
 ```bash
 cat /etc/passwd
 ls -la /usr/bin/showtext
 cat /usr/bin/showtext
-exit    # Adjust the window to very small in height as more command is used.
+exit    # Resize terminal window to very small height, as 'more' is used
 ssh bandit26@bandit.labs.overthewire.org -p 2220 -i test
 (esc) :set shell=/bin/bash
 (esc) :shell
 cat /etc/bandit_pass/bandit26
 ```
 
-In the above command test is the key provided in level 25 saved on our local PC.
+Note: The test file above refers to the private key obtained in level 25, saved locally.
 
 ## Level 26
 
-**Goal:** Good job getting a shell! Now hurry and grab the password for bandit27!
+**Goal:** Good job getting a shell! Now hurry and grab the password for `bandit27`!
 
-While we are already logged in.. we can use the given binary file to run any command as bandit27. I will use it to get the password for bandit27
+While already logged in, I utilized the provided binary executable to run commands with the privileges of user `bandit27`. Using this, I retrieved the password for `bandit27` with the following command:
 
 ```bash
 ./bandit27-do cat /etc/bandit_pass/bandit27
@@ -398,9 +414,9 @@ While we are already logged in.. we can use the given binary file to run any com
 
 ## Level 27
 
-**Goal:** There is a git repository at ssh://bandit27-git@localhost/home/bandit27-git/repo via the port 2220. The password for the user bandit27-git is the same as for the user bandit27. Clone the repository and find the password for the next level.
+**Goal:** There is a git repository at `ssh://bandit27-git@localhost/home/bandit27-git/repo` via the port `2220`. The password for the user `bandit27-git` is the same as for the user `bandit27`. Clone the repository and find the password for the next level.
 
-For this we just need to clone the repo nothing else. The only trick here is that how will you pass the port in the git url.
+For this level, the task was simply to clone the repository. The key detail was how to specify the SSH port within the Git URL.
 
 ```bash
 mktemp -d
@@ -412,9 +428,9 @@ cat README
 
 ## Level 28
 
-**Goal:** There is a git repository at ssh://bandit28-git@localhost/home/bandit28-git/repo via the port 2220. The password for the user bandit28-git is the same as for the user bandit28. Clone the repository and find the password for the next level.
+**Goal:** There is a git repository at `ssh://bandit28-git@localhost/home/bandit28-git/repo` via the port `2220`. The password for the user `bandit28-git` is the same as for the user `bandit28`. Clone the repository and find the password for the next level.
 
-While the goal is similar to the last level but password is not present here... Maybe in the last commit?? and few quick commands for git and found it.
+Although the objective was similar to the previous level, the password was not found in the current repository files. I suspected it might be located in an earlier commit. Using basic Git commands, I located the password as follows:
 
 ```bash
 mktemp -d
@@ -429,9 +445,9 @@ cat README.md
 
 ## Level 29
 
-**Goal:** There is a git repository at ssh://bandit29-git@localhost/home/bandit29-git/repo via the port 2220. The password for the user bandit29-git is the same as for the user bandit29. Clone the repository and find the password for the next level.
+**Goal:** There is a git repository at `ssh://bandit29-git@localhost/home/bandit29-git/repo` via the port `2220`. The password for the user `bandit29-git` is the same as for the user `bandit29`. Clone the repository and find the password for the next level.
 
-Same initial procedue as last one. And upon reading it says no password in production.. maybe a different branch??
+The initial procedure was the same as the previous level. Upon inspection, the `README` indicated that the password was not present in the production branch, suggesting it might be located on a different branch.
 
 ```bash
 mktemp -d
@@ -439,16 +455,16 @@ cd /tmp/tmp.M1nerAnJ8A
 git clone ssh://bandit29-git@localhost:2220/home/bandit29-git/repo
 cd repo
 cat README.md
-git branch -r      # Helps you list all the remote branchs.
+git branch -r      # Lists all remote branches.
 git checkout origin/dev
 cat README.md
 ```
 
 ## Level 30
 
-**Goal:** There is a git repository at ssh://bandit30-git@localhost/home/bandit30-git/repo via the port 2220. The password for the user bandit30-git is the same as for the user bandit30. Clone the repository and find the password for the next level.
+**Goal:** There is a git repository at `ssh://bandit30-git@localhost/home/bandit30-git/repo` via the port `2220`. The password for the user `bandit30-git` is the same as for the user `bandit30`. Clone the repository and find the password for the next level.
 
-Ahhhhhhhhhh...again the same steps... And the read me file was empty... No remote branchs... no commits... but I found the tag :|
+Once again, I followed the usual steps. However, this time the `README` file was empty, with no remote branches or commits available. Instead, I discovered a Git tag which led me to the password.
 
 ```bash
 mktemp -d
@@ -462,9 +478,9 @@ git show secret
 
 ## Level 31
 
-**Goal:** There is a git repository at ssh://bandit31-git@localhost/home/bandit31-git/repo via the port 2220. The password for the user bandit31-git is the same as for the user bandit31. Clone the repository and find the password for the next level.
+**Goal:** There is a git repository at `ssh://bandit31-git@localhost/home/bandit31-git/repo` via the port `2220`. The password for the user `bandit31-git` is the same as for the user `bandit31`. Clone the repository and find the password for the next level.
 
-SAME..SAME...SAME...SAME... Well We need to make a file and commit it to the master branch.
+The process was quite repetitive. This time, I needed to create a file and commit it to the master branch.
 
 ```bash
 mktemp -d
@@ -473,17 +489,17 @@ git clone ssh://bandit31-git@localhost:2220/home/bandit31-git/repo
 cd repo
 cat README.md
 echo "May I come in?" > key.txt
-vim .gitignore      # Remove the *.txt, save and exit
+vim .gitignore      # Remove the '*.txt' pattern, then save and exit
 git add .
 git commit -a -m "Key File"
-git push origin master      # Will throw error but the key will be written in the error message
+git push origin master      # Although this will generate an error, the key will be revealed within the error message
 ```
 
 ## Level 32
 
 **Goal:** After all this git stuff, it’s time for another escape. Good luck!
 
-Finally git stuff is over. I had spent a long time on this but evently had to take [hint](https://mayadevbe.me/posts/overthewire/bandit/level33/)
+Finally, the Git challenges are behind me. I spent quite a bit of time on this level, but eventually needed to take a [hint](https://mayadevbe.me/posts/overthewire/bandit/level33/)
 
 ```bash
 $0
@@ -499,6 +515,8 @@ cat /etc/bandit_pass/bandit33
 ![Bandit](../../assets/ctf/bandit-final.png)
 
 ## Passwords
+
+> Note: Password are changed periodically. They are latest as of Jun 07, 2025
 
 - Level 1: `ZjLjTmM6FvvyRnrb2rfNWOZOTa6ip5If`
 - Level 2: `263JGJPfgU6LtdEvgfWU1XP5yac29mFx`
