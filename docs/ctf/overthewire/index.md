@@ -5,6 +5,7 @@
 ## My Notes
 
 - [Bandit - Level: Beginner](/ctf/overthewire/bandit.md)
+- [Leviathan - Level: Beginner/Intermediate](/ctf/overthewire/leviathan.md)
 
 ## Reference
 
